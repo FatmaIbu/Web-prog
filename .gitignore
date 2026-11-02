@@ -19,3 +19,4 @@ node_modules/
 .DS_Store
 Thumbs.db
 .vscode/
+/furni-1.0.0/Backend/config/config.php
