@@ -80,6 +80,39 @@ FurniEra-1/
 │
 └── README.md
 ```
+Milestone 2 – Database and DAO Layer
+
+Milestone 2 focuses on implementing the backend database structure and Data Access Object (DAO) layer using PHP and MySQL.
+
+Implemented Features
+
+MySQL database named furniera_db.
+
+Five database entities: Users, Products, Categories, Orders, and Reviews.
+
+Primary and foreign key relationships.
+
+SQL database export containing sample data.
+
+PHP database connection using PDO.
+
+BaseDAO class providing shared database operations.
+
+Five entity-specific DAO classes.
+
+CRUD operations using prepared SQL statements.
+
+Database connection and DAO testing scripts.
+
+Testing
+
+Database connection successfully tested.
+
+ProductDAO READ operation tested successfully.
+
+ProductDAO CREATE, READ, UPDATE, and DELETE operations tested successfully.
+
+Status: Database and DAO implementation completed. Further testing and API integration are planned for subsequent development.
 
 
 ## Development Roadmap
