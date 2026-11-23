@@ -53,20 +53,50 @@ class UserDAO extends BaseDAO {
     }
 
     // UPDATE - Edit user information
+    
     public function update($id, $data) {
-        $sql = "UPDATE users
-                SET full_name = :full_name,
-                    email = :email
-                WHERE id = :id";
+        $allowed = ['full_name', 'email'];
+        $fields = [];
+        $params = ['id' => $id];
+
+        foreach ($allowed as $field) {
+            if (array_key_exists($field, $data)) {
+                $fields[] = "$field = :$field";
+                $params[$field] = $data[$field];
+            }
+        }
+
+        if (empty($fields)) {
+            throw new InvalidArgumentException(
+                "No valid fields to update"
+            );
+        }
+
+        $sql = "UPDATE users SET " .
+            implode(', ', $fields) .
+            " WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
 
-        return $stmt->execute([
-            'id' => $id,
-            'full_name' => $data['full_name'],
-            'email' => $data['email']
-        ]);
+        return $stmt->execute($params);
     }
 
+
     // DELETE - Inherited from BaseDAO
+
+
+public function getByEmailForAuth(string $email): array|false {
+    $sql = "SELECT id, full_name, email, password_hash, role
+            FROM users
+            WHERE email = :email
+            LIMIT 1";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+        'email' => $email
+    ]);
+
+    return $stmt->fetch();
+}
+
 }

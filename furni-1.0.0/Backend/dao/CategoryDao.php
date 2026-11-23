@@ -28,20 +28,34 @@ class CategoryDAO extends BaseDAO {
     // Inherited from BaseDAO
 
     // UPDATE - Edit a category
+    
     public function update($id, $data) {
-        $sql = "UPDATE categories
-                SET name = :name,
-                    description = :description
-                WHERE id = :id";
+        $allowed = ['name', 'description'];
+        $fields = [];
+        $params = ['id' => $id];
+
+        foreach ($allowed as $field) {
+            if (array_key_exists($field, $data)) {
+                $fields[] = "$field = :$field";
+                $params[$field] = $data[$field];
+            }
+        }
+
+        if (empty($fields)) {
+            throw new InvalidArgumentException(
+                "No valid fields to update"
+            );
+        }
+
+        $sql = "UPDATE categories SET " .
+            implode(', ', $fields) .
+            " WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
 
-        return $stmt->execute([
-            'id' => $id,
-            'name' => $data['name'],
-            'description' => $data['description'] ?? null
-        ]);
+        return $stmt->execute($params);
     }
+
 
     // DELETE - Inherited from BaseDAO
 }

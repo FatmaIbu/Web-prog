@@ -1,0 +1,14 @@
+{
+    "require": {
+        "flightphp/core": "^3.19",
+        "firebase/php-jwt": "^7.2"
+    },
+    "require-dev": {
+        "zircote/swagger-php": "^7.8"
+    },
+    "autoload": {
+    "classmap": [
+        "docs/"
+    ]
+    }
+}

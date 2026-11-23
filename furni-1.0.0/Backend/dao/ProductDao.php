@@ -36,28 +36,42 @@ class ProductDAO extends BaseDAO {
     // getById() is inherited from BaseDAO
 
     // UPDATE - Edit a product
+    
     public function update($id, $data) {
-        $sql = "UPDATE products SET
-                    category_id = :category_id,
-                    name = :name,
-                    description = :description,
-                    price = :price,
-                    stock = :stock,
-                    image_url = :image_url
-                WHERE id = :id";
+        $allowed = [
+            'category_id',
+            'name',
+            'description',
+            'price',
+            'stock',
+            'image_url'
+        ];
+
+        $fields = [];
+        $params = ['id' => $id];
+
+        foreach ($allowed as $field) {
+            if (array_key_exists($field, $data)) {
+                $fields[] = "$field = :$field";
+                $params[$field] = $data[$field];
+            }
+        }
+
+        if (empty($fields)) {
+            throw new InvalidArgumentException(
+                "No valid fields to update"
+            );
+        }
+
+        $sql = "UPDATE products SET " .
+            implode(', ', $fields) .
+            " WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
 
-        return $stmt->execute([
-            'id' => $id,
-            'category_id' => $data['category_id'],
-            'name' => $data['name'],
-            'description' => $data['description'] ?? null,
-            'price' => $data['price'],
-            'stock' => $data['stock'] ?? 0,
-            'image_url' => $data['image_url'] ?? null
-        ]);
+        return $stmt->execute($params);
     }
+
 
     // DELETE - Remove a product
     // delete() is inherited from BaseDAO
