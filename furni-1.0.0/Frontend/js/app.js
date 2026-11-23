@@ -3,7 +3,7 @@ $(document).ready(function () {
 
     const app = $.spapp({
         defaultView: "#home",
-        templateDir: "",
+        templateDir: "./",
         pageNotFound: false
     });
 
@@ -26,14 +26,14 @@ $(document).ready(function () {
     pages.forEach(function (page) {
         app.route({
             view: page,
-            load: page + ".html",
+            load: "pages/" + page + ".html",
 
             onCreate: function () {
                 initializeFeatures();
             },
 
             onReady: function () {
-                initializeFeatures();
+                // Page already loaded; no need to initialize again.
             }
         });
     });
@@ -50,12 +50,9 @@ $(document).ready(function () {
         });
     }
 
-    $(window).on("hashchange", function () {
-        updateActiveNav();
-    });
+    $(window).on("hashchange", updateActiveNav);
 
     app.run();
-
     updateActiveNav();
 
 });
